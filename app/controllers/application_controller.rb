@@ -89,4 +89,10 @@ class ApplicationController < ActionController::Base
       @user = User.where(:rss_token => params[:token].to_s).first
     end
   end
+
+#  before_action :set_locale
+# 
+#  def set_locale
+#    I18n.locale = params[:locale] || I18n.default_locale
+#  end
 end

@@ -3,7 +3,7 @@ class SignupController < ApplicationController
 
   def index
     if @user
-      flash[:error] = "You are already signed up."
+      flash[:error] = t(:youalreadysignedup)
       return redirect_to "/"
     end
 
@@ -12,12 +12,12 @@ class SignupController < ApplicationController
 
   def invited
     if @user
-      flash[:error] = "You are already signed up."
+      flash[:error] = t(:youalreadysignedup)
       return redirect_to "/"
     end
 
     if !(@invitation = Invitation.where(:code => params[:invitation_code].to_s).first)
-      flash[:error] = "Invalid or expired invitation"
+      flash[:error] = t(:invalidorexpiredinvitation)
       return redirect_to "/signup"
     end
 
@@ -31,7 +31,7 @@ class SignupController < ApplicationController
 
   def signup
     if !(@invitation = Invitation.where(:code => params[:invitation_code].to_s).first)
-      flash[:error] = "Invalid or expired invitation."
+      flash[:error] = t(:invalidorexpiredinvitation)
       return redirect_to "/signup"
     end
 
@@ -43,7 +43,7 @@ class SignupController < ApplicationController
     if @new_user.save
       @invitation.destroy
       session[:u] = @new_user.session_token
-      flash[:success] = "Welcome to #{Rails.application.name}, " <<
+      flash[:success] = "Bienvenue au #{Rails.application.name}, " <<
         "#{@new_user.username}!"
 
       Countinual.count!("#{Rails.application.shortname}.users.created", "+1")

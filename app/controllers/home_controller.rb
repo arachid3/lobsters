@@ -109,7 +109,7 @@ class HomeController < ApplicationController
       paginate scope
     }
 
-    @heading = @title = "Recent Stories"
+    @heading = @title = t(:recentstorieswindow)
     @cur_url = "/recent"
 
     # our content changes every page load, so point at /newest.rss to be stable

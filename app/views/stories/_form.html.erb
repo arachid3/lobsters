@@ -1,23 +1,21 @@
 <% if f.object.errors.count == 1 && f.object.already_posted_story %>
   <div class="flash-error">
-  <h2>Error: This story was already submitted <%=
-    time_ago_in_words(f.object.already_posted_story.created_at) %> ago</h2>
+  <h2><%=t :storyalreadysubmittederrorpart1 %><%=
+    time_ago_in_words(f.object.already_posted_story.created_at) %><%=t :storyalreadysubmittederrorpart2 %></h2>
   <p>
-  Please view the <a href="<%= f.object.already_posted_story.comments_url %>"
-  target="_blank">previous discussion</a> for this story.
+  <%=t :storyalreadysubmittederrorpart3 %><a href="<%= f.object.already_posted_story.comments_url %>"
+  target="_blank"><%=t :previousdiscussionlink %></a><%=t :storyalreadysubmittederrorpart4 %>
   </p>
   </div>
 <% elsif f.object.errors.any? %>
   <%= error_messages_for f.object %>
 <% elsif !f.object.errors.any? && f.object.already_posted_story %>
   <div class="flash-notice">
-  <h2>Note: This story was already submitted <%=
-    time_ago_in_words(f.object.already_posted_story.created_at) %> ago, but may
-    be submitted again.</h2>
+  <h2><%=t :storyalreadysubmittednotepart1 %><%=
+    time_ago_in_words(f.object.already_posted_story.created_at) %><%=t :storyalreadysubmittednotepart2 %></h2>
   <p>
-  Please view the <a href="<%= f.object.already_posted_story.comments_url %>"
-  target="_blank">previous discussion</a> for this story first.  If the content
-  has changed or warrants new discussion, you may submit it again.
+  <%=t :storyalreadysubmittedpartpart3 %> <a href="<%= f.object.already_posted_story.comments_url %>"
+  target="_blank"><%=t :previousdiscussionlink %></a><%=t :storyalreadysubmittedpartpart4 %>
   </p>
   </div>
 
@@ -27,12 +25,12 @@
 <div class="box">
   <div class="boxline">
   <% if f.object.url_is_editable_by_user?(@user) %>
-    <%= f.label :url, "URL:", :class => "required" %>
+    <%= f.label :url, t(:urlforstory), :class => "required" %>
     <%= f.text_field :url, :autocomplete => "off" %>
-    <%= button_tag "Fetch Title", :id => "story_fetch_title",
+    <%= button_tag t(:fetchtitlebutton), :id => "story_fetch_title",
       :type => "button" %>
   <% elsif !f.object.new_record? && !f.object.url.blank? %>
-    <%= f.label :url, "URL:", :class => "required" %>
+    <%= f.label :url, t(:urlforstory), :class => "required" %>
     <div class="d">
     <a href="<%= f.object.url %>"><%= f.object.url %></a>
     </div>
@@ -40,12 +38,12 @@
   </div>
 
   <div class="boxline">
-    <%= f.label :title, "Title:", :class => "required" %>
+    <%= f.label :title, t(:titleforstory), :class => "required" %>
     <%= f.text_field :title, :maxlength => 100, :autocomplete => "off"  %>
   </div>
 
   <div class="boxline" style="margin-bottom: 2px;">
-  <%= f.label :tags_a, "Tags:", :class => "required",
+  <%= f.label :tags_a, t(:tagsforstory), :class => "required",
     :style => "line-height: 2.3em;" %>
   <%= f.select "tags_a", options_for_select(
     Tag.all_with_filtered_counts_for(@user).map{|t|
@@ -58,57 +56,44 @@
   </div>
 
   <div class="boxline">
-    <%= f.label :description, "Text:", :class => "required" %>
+    <%= f.label :description, t(:textforstory), :class => "required" %>
     <%= f.text_area :description, :rows => 15,
-      :placeholder => "Optional when submitting a URL; please see guidelines",
+      :placeholder => t(:descriptiontextforstory),
       :autocomplete => "off" %>
   </div>
 
   <div class="boxline markdown_help_toggler">
     <a href="#" id="story_guidelines_toggler">
-      Story submission guidelines
+      <%=t :storysubmissionguidelineslink %>
     </a>
     <div id="story_guidelines" style="<%= show_guidelines?? "" :
     "display: none;" %>">
       <div style="float: right;">
       <a href="javascript:window.location=%22<%= root_url %>stories/new?url=%22+encodeURIComponent(document.location)+%22&title=%22+encodeURIComponent(document.title)"
       style="border: 1px solid #ddd; padding: 0.5em; background-color:
-      #f8f8f8; line-height: 1.5em; margin-left: 1em;">Submit to
+      #f8f8f8; line-height: 1.5em; margin-left: 1em;"><%=t :submittolink %>
       <%= Rails.application.name %></a>
       </div>
       <ul>
 
         <li><p>
-        To be able to easily submit a page you're viewing in your browser
-        to <%= Rails.application.name %>, drag the bookmarklet to the right
-        to your bookmark bar.  You'll be taken to this page with the viewed
-        page's URL and title.
+        <%=t :submitguidelinespart1 %><%= Rails.application.name %><%=t :submitguidelinespart2 %>
         </p></li>
 
         <li><p>
-        When submitting a URL, the text field is optional and should only
-        be used when additional context or explanation of the URL is
-        needed.  Commentary or opinion should be reserved for a comment,
-        so that it can be voted on separately from the story.
+	<%=t :submitguidelinespart3 %>
         </p></li>
 
         <li><p>
-        Do not editorialize story titles, but when the original story's
-        title has no context or is unclear, please change it.  <strong>Please
-        remove extraneous components from titles such as the name of the
-        site or section.</strong>
+        <%=t :submitguidelinespart4 %>  <strong><%=t :submitguidelinespart5 %></strong>
         </p></li>
 
         <li><p>
-        If no tags clearly apply to the story you are submitting, chances
-        are it does not belong here.  Do not overreach with tags if they
-        are not the primary focus of the story.
+        <%=t :submitguidelinespart6 %>
         </p></li>
 
         <li><p>
-        When the story being submitted is more than a year or so old,
-        please add the year the story was written to the post title in
-        parentheses.
+        <%=t :submitguidelinespart6 %>
         </p></li>
 
       </ul>

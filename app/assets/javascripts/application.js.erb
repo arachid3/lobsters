@@ -29,12 +29,12 @@ var _Lobsters = Class.extend({
     if (li.hasClass("hidden")) {
       act = "unhide";
       li.removeClass("hidden");
-      hiderEl.innerHTML = "hide";
+      hiderEl.innerHTML = "cacher";
     }
     else {
       act = "hide";
       li.addClass("hidden");
-      hiderEl.innerHTML = "unhide";
+      hiderEl.innerHTML = "dé-cacher";
     }
 
     $.post("/stories/" + li.attr("data-shortid") + "/" + act);
@@ -174,12 +174,8 @@ var _Lobsters = Class.extend({
       if ($(form).find('#parent_comment_short_id').length) {
         $(form).closest('.comment').replaceWith($.parseHTML(data));
       } else {
-        if ($(form).attr("id").match(/^edit_comment_.+$/)) {
-          $(form).parent(".comment").replaceWith($.parseHTML(data));
-        } else {
-          $(form).closest('.comment').after($.parseHTML(data));
-          $(form).find('textarea').val('');
-        }
+        $(form).closest('.comment').after($.parseHTML(data));
+        $(form).find('textarea').val('');
       }
     });
   },
@@ -297,14 +293,10 @@ $(document).ready(function() {
     }
 
     var comment = $(this).closest(".comment");
-    if ($("#reply_form_" + comment.attr("id")).length > 0)
-      return false;
-
     var replies = comment.nextAll(".comments").first();
     $.get("/comments/" + comment.attr("data-shortid") + "/reply",
     function(data) {
       var reply = $($.parseHTML(data));
-      reply.attr("id", "reply_form_" + comment.attr("id"));
       replies.prepend(reply);
       reply.find("textarea").focus();
     });
@@ -317,7 +309,7 @@ $(document).ready(function() {
     if (comment.length) {
       $.get("/comments/" + comment.attr("data-shortid"),
       function(data) {
-        comment.html($.parseHTML(data));
+        comment.replaceWith($.parseHTML(data));
       });
     } else {
       $(this).closest(".comment").remove();
@@ -328,7 +320,7 @@ $(document).ready(function() {
     var comment = $(this).closest(".comment");
     $.get("/comments/" + comment.attr("data-shortid") + "/edit",
     function(data) {
-      comment.replaceWith($.parseHTML(data));
+      comment.html($.parseHTML(data));
     });
   });
 
